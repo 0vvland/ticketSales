@@ -3,6 +3,15 @@ import {IUser} from "../../models/users";
 import {Router} from "@angular/router";
 
 const LOCAL_STORAGE_NAME = 'currentUser'
+const LOCAL_STORAGE_TOKEN_NAME = 'accessToken'
+
+const fetchHandler = (e: Response) => {
+  if (e.status < 500) {
+    console.log(e);
+    return e.json()
+  }
+  return {error:'Something goes wrong'}
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +20,7 @@ export class AuthService {
 
   private userStorage: IUser[] = [];
   private currentUser: IUser | null = null;
+  private accessToken: string | null = null;
 
   constructor(
     private router: Router,
@@ -19,9 +29,10 @@ export class AuthService {
       return
     }
     const storedUser: IUser | null = JSON.parse(localStorage.getItem(LOCAL_STORAGE_NAME) || 'null');
+    const storedToken = JSON.parse(localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME) || 'null');
     if (storedUser) {
       this.userStorage.push(storedUser);
-      this.auth(storedUser)
+      this.auth(storedUser, storedToken)
     }
   }
 
@@ -29,15 +40,17 @@ export class AuthService {
     return this.userStorage.find((user) => login === user.login) || null;
   }
 
-  private auth(user: IUser, isRememberMe?: boolean) {
+  private auth(user: IUser, token: string, isRememberMe?: boolean) {
     this.currentUser = user;
+    this.accessToken = token;
     if (isRememberMe) {
       localStorage.setItem(LOCAL_STORAGE_NAME, JSON.stringify(user));
+      localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, JSON.stringify(token));
     }
   }
 
-  private authAndRedirect(user: IUser, isRememberMe?: boolean) {
-    this.auth(user, isRememberMe);
+  private authAndRedirect(user: IUser, token: string, isRememberMe?: boolean) {
+    this.auth(user, token, isRememberMe);
     this.router.navigate(['tickets']);
   }
 
@@ -50,27 +63,41 @@ export class AuthService {
   }
 
   get token(): string | null {
-    return this.isAuthenticated ? '12345' : null;
+    return this.isAuthenticated ? this.accessToken : null;
   }
 
-  authUser(login: string, password: string, isRememberMe: boolean): true | string {
-    const user = this.getUser(login);
-    if (!user) {
-      return 'User not found';
+  async authUser(login: string, password: string, isRememberMe: boolean): Promise<true | string> {
+    const result: { user: IUser, token: string, error: string} = await fetch( 'http://localhost:3000/users/auth', {
+      body: JSON.stringify({ login, password }),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(fetchHandler);
+
+    if (result.error) {
+      return result.error
     }
-    if (user.password !== password) {
-      return 'Wrong password';
-    }
-    this.authAndRedirect(user, isRememberMe)
+
+    const user = result.user
+    this.authAndRedirect(user, result.token, isRememberMe)
     return true;
   }
 
-  addUser(user: IUser, isRememberMe?: boolean): true | string {
-    if (this.getUser(user.login)) {
-      return 'User already exists';
+  async addUser(user: IUser, isRememberMe?: boolean): Promise<true | string> {
+    const result: { user: IUser, token: string, error: string} = await fetch( 'http://localhost:3000/users/registration', {
+      body: JSON.stringify(user),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(fetchHandler);
+
+    if (result.error) {
+      return result.error
     }
-    this.userStorage.push(user);
-    this.authAndRedirect(user, isRememberMe)
+
+    this.authAndRedirect(result.user, result.token, isRememberMe)
     return true;
   }
 

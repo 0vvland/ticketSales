@@ -1,5 +1,5 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
 import {TicketStorageService} from "../../../services/ticket-storage/ticket-storage.service";
 import {INearestTour, ITour, ITourLocation} from "../../../models/tours";
 import {IUser} from "../../../models/users";
@@ -11,7 +11,8 @@ import {TicketService} from "../../../services/ticket/ticket.service";
 @Component({
   selector: 'app-ticket-item',
   templateUrl: './ticket-item.component.html',
-  styleUrls: ['./ticket-item.component.scss']
+  styleUrls: ['./ticket-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TicketItemComponent implements OnInit {
   ticket: ITour;
@@ -71,6 +72,7 @@ export class TicketItemComponent implements OnInit {
   }
 
   getTourCountry(tour: INearestTour) {
+    console.log('t')
     return this.tourLocations.find(({id}) => tour.locationId === id)?.name || '-';
   }
 
@@ -78,12 +80,12 @@ export class TicketItemComponent implements OnInit {
     this.setCurrentTicket();
   }
 
-  setCurrentTicket() {
+  async setCurrentTicket() {
 
     const routerId = this.route.snapshot.paramMap.get('id');
 
     if (routerId) {
-      const ticket = this.ticketStorage.getTicket(routerId);
+      const ticket = await this.ticketStorage.getTicket(routerId);
       if (!ticket) {
         this.isNotFound = true;
         return;

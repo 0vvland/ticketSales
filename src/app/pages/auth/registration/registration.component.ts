@@ -32,7 +32,7 @@ export class RegistrationComponent implements OnInit {
 
   }
 
-  onAuth(): void {
+  async onAuth(): Promise<void> {
     if (this.password !== this.repeatPassword) {
       this.messageService.add({severity: 'error', summary: 'Passwords are not the same'});
       return
@@ -42,7 +42,7 @@ export class RegistrationComponent implements OnInit {
       login: this.login,
       password: this.password,
     }
-    const result = this.authService.addUser(user, this.isRemember);
+    const result = await this.authService.addUser(user, this.isRemember);
     if (result !== true) {
       this.messageService.add({severity: 'error', summary: result});
       return;

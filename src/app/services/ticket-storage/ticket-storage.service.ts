@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {ITour} from "../../models/tours";
 import {TicketService} from "../ticket/ticket.service";
-import {Observable} from "rxjs";
+import { firstValueFrom, Observable } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,8 @@ export class TicketStorageService {
     return this.ticketStorage;
   }
 
-  getTicket(id: string) {
-    return this.ticketStorage.find((e) => e.id === id);
+  async getTicket(id: string) {
+    return await firstValueFrom(this.ticketService.getTicket(id));
   }
 
   fetchTickets (force?: boolean) {

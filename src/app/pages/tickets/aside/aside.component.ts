@@ -4,6 +4,8 @@ import {ITourTypeSelect} from "../../../models/tours";
 import {TicketService} from "../../../services/ticket/ticket.service";
 import {MessageService} from "primeng/api";
 import {SettingsService} from "../../../services/settings/settings.service";
+import { HttpClient } from "@angular/common/http";
+import { TicketStorageService } from "../../../services/ticket-storage/ticket-storage.service";
 
 @Component({
   selector: 'app-aside',
@@ -22,8 +24,10 @@ export class AsideComponent implements OnInit {
 
   constructor(
     private ticketService: TicketService,
+    private ticketStorage: TicketStorageService,
     private messageService: MessageService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private http: HttpClient
   ) {
   }
 
@@ -63,6 +67,18 @@ export class AsideComponent implements OnInit {
   initSettingsData() {
     this.settingsService.loadUserSettingsSubject({
       saveToken: false
+    })
+  }
+
+  initTours() {
+    this.http.post('http://localhost:3000/tours/generate', {}).subscribe((data) => {
+      this.ticketStorage.fetchTickets(true);
+    })
+  }
+
+  deleteTours() {
+    this.http.delete('http://localhost:3000/tours/clear').subscribe((data) => {
+      this.ticketStorage.fetchTickets(true);
     })
   }
 }

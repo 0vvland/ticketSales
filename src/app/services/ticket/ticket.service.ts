@@ -19,6 +19,10 @@ export class TicketService {
     }));
   }
 
+  getTicket(id: string): Observable<ITour> {
+    return this.ticketServiceRest.getTicket(id);
+  }
+
   getTicketTypeObservable() {
     return this.ticketSubject.asObservable();
   }

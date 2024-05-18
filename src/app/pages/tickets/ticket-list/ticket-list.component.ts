@@ -64,6 +64,6 @@ export class TicketListComponent implements OnInit {
   }
 
   goToTicket(item: ITour) {
-    this.router.navigate([`/tickets/ticket/${item.id}`]);
+    this.router.navigate([`/tickets/ticket/${item._id}`]);
   }
 }

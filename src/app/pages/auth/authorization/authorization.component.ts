@@ -24,12 +24,12 @@ export class AuthorizationComponent implements OnInit {
 
   }
 
-  onAuth(): void {
+  async onAuth(): Promise<void> {
     const user: IUser = {
       login: this.login,
       password: this.password,
     }
-    const result = this.authService.authUser(this.login, this.password, this.isRememberMe);
+    const result = await this.authService.authUser(this.login, this.password, this.isRememberMe);
     if (result !== true) {
       this.messageService.add({severity:'error', summary: result});
       return;

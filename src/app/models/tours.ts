@@ -1,4 +1,5 @@
 export interface ITour {
+  _id?: string
   id: string
   name: string
   description: string
