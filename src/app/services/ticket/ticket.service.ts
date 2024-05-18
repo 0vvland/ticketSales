@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {TicketRestService} from "../ticket-rest/ticket-rest.service";
 import {map, Observable, Subject} from "rxjs";
 import {INearestTour, ITour, ITourLocation, ITourTypeSelect} from "../../models/tours";
+import { IOrder } from "../../models/orders";
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +59,7 @@ export class TicketService {
     return newTicketData;
   }
 
-  sendTourData(data: any) {
+  sendTourData(data: IOrder) {
     return this.ticketServiceRest.sendTourData(data)
   }
 }

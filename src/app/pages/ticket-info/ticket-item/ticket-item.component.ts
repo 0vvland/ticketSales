@@ -47,7 +47,7 @@ export class TicketItemComponent implements OnInit {
       firstName: new FormControl('', {validators: Validators.required}),
       lastName: new FormControl('', [Validators.required, Validators.minLength(5)]),
       cardNumber: new FormControl(''),
-      birthday: new FormControl(''),
+      birthDay: new FormControl(''),
       age: new FormControl(22),
       citizenship: new FormControl(''),
     })
@@ -59,7 +59,6 @@ export class TicketItemComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.ticketSearch)
     if (!this.ticketSearch) {
       return;
     }
@@ -72,7 +71,6 @@ export class TicketItemComponent implements OnInit {
   }
 
   getTourCountry(tour: INearestTour) {
-    console.log('t')
     return this.tourLocations.find(({id}) => tour.locationId === id)?.name || '-';
   }
 
@@ -106,7 +104,8 @@ export class TicketItemComponent implements OnInit {
 
   onSubmit() {
     console.log(this.userForm.value)
-    this.ticketService.sendTourData(this.userForm.value).subscribe(console.log)
+    const tourId = this.route.snapshot.paramMap.get('id');
+    this.ticketService.sendTourData({ ...this.userForm.value, tourId  }).subscribe(console.log)
   }
 
   initSearchTour() {

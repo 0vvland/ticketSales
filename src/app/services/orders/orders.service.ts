@@ -3,6 +3,7 @@ import {BehaviorSubject, map, of, switchAll, switchMap, withLatestFrom} from "rx
 import {ORDERMOCK, TOrder, TOrderProps} from "../../shared/mock/orders";
 import {TreeNode} from "primeng/api";
 import {TicketRestService} from "../ticket-rest/ticket-rest.service";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,13 @@ export class OrdersService {
   readonly groupOrders$ = this.groupOrders.asObservable();
 
   constructor(
-    private ticketServiceRest: TicketRestService
+    private ticketServiceRest: TicketRestService,
+    private http: HttpClient
   ) {
   }
 
   getOrders() {
-    return of(ORDERMOCK).pipe(
+    return this.http.get<TOrder[]>('http://localhost:3000/orders').pipe(
       withLatestFrom(this.groupOrders$),
       switchMap(([orders, group]) => {
         return of(orders).pipe(

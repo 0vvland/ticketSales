@@ -3,19 +3,19 @@
 <p-treeTable [value]="tableData$ | async">
   <ng-template pTemplate="header">
     <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Type</th>
+      <th>id</th>
+      <th>Tour</th>
+      <th>User</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rowNode let-rowData=rowData>
     <tr>
       <td>
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-        {{rowData.name}}
+        {{rowData._id}}
       </td>
-      <td>{{rowData.description}}</td>
-      <td>{{rowData.type}}</td>
+      <td>{{rowData.tourId}}</td>
+      <td>{{rowData.userId}}</td>
     </tr>
   </ng-template>
 </p-treeTable>

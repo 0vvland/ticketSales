@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {INearestTour, ITour, ITourLocation} from "../../models/tours";
+import { IOrder } from "../../models/orders";
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class TicketRestService {
     return this.http.get(`/assets/mocks/nearestTours${type + 1}.json`)
   }
 
-  sendTourData(data: any) {
-    return this.http.post(`/`, data)
+  sendTourData(data: IOrder) {
+    return this.http.post(`http://localhost:3000/orders/`, data)
   }
 }
