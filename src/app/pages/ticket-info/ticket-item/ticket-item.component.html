@@ -11,7 +11,7 @@
   styleClass="p-card-shadow col-3"
 >
   <ng-template pTemplate="header">
-    <img alt="Card" src="/assets/img/{{ticket.img}}">
+    <img alt="Card" src="http://localhost:3000/public/{{ticket.img}}">
   </ng-template>
   <p>{{ticket.description}}</p>
 </p-card>
@@ -111,7 +111,7 @@
     <ng-template let-tour pTemplate="item">
       {{tour.name}} ({{getTourCountry(tour)}})
       <div>
-        <img class="w-100 h-100" src="/assets/img/{{tour.img}}">
+        <img class="w-100 h-100" src="http://localhost:3000/public/{{tour.img}}">
       </div>
     </ng-template>
 

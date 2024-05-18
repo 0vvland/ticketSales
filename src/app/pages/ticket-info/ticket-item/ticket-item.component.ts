@@ -109,14 +109,13 @@ export class TicketItemComponent implements OnInit {
   }
 
   initSearchTour() {
-    console.log('initSearchTour')
     const type = Math.floor(Math.random() * this.searchTypes.length)
     if (this.ticketRestSub && !this.ticketRestSub.closed) {
       this.ticketRestSub.unsubscribe();
     }
 
-    this.ticketRestSub = this.ticketService.getRandomNearestEvent(type).subscribe((data: any) => {
-      this.nearestTours = this.ticketService.transformData([data], this.tourLocations)
+    this.ticketRestSub = this.ticketService.getSimilarTour(this.ticketSearchValue).subscribe((data: any) => {
+      this.nearestTours = data;
     })
   }
 }

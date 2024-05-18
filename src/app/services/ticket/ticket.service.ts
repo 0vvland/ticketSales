@@ -48,6 +48,10 @@ export class TicketService {
     return this.ticketServiceRest.getRandomNearestEvent(type);
   }
 
+  getSimilarTour(name: string) {
+    return this.ticketServiceRest.getSimilarTour(name)
+  }
+
   transformData(data: INearestTour[], tourLocations: ITourLocation[]) {
     const newTicketData: INearestTour[] = [];
     data.forEach((e) => {
@@ -61,6 +65,10 @@ export class TicketService {
 
   sendTourData(data: IOrder) {
     return this.ticketServiceRest.sendTourData(data)
+  }
+
+  createTour(formParams: FormData) {
+      return this.ticketServiceRest.createTour(formParams)
   }
 }
 

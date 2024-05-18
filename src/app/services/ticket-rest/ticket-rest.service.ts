@@ -25,7 +25,7 @@ export class TicketRestService {
   }
 
   getNearestTickets() {
-    return this.http.get<INearestTour[]>('https://62b9e756ff109cd1dc9dae16.mockapi.io/apiv/v1/nearestTours/');
+    return this.http.get<INearestTour[]>('http://localhost:3000/tours/');
   }
 
   getLocationList() {
@@ -38,5 +38,13 @@ export class TicketRestService {
 
   sendTourData(data: IOrder) {
     return this.http.post(`http://localhost:3000/orders/`, data)
+  }
+
+  createTour(formParams: FormData) {
+    return this.http.post(`http://localhost:3000/tours/`, formParams)
+  }
+
+  getSimilarTour(name: string) {
+    return this.http.get(`http://localhost:3000/tours/name/${name}`)
   }
 }
