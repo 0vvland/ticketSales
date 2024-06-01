@@ -14,7 +14,7 @@
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
         {{rowData._id}}
       </td>
-      <td>{{rowData.tourId}}</td>
+      <td>{{rowData.tour?.name}}</td>
       <td>{{rowData.userId}}</td>
     </tr>
   </ng-template>
